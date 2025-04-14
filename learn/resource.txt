@@ -1,0 +1,20 @@
+- GET `/products` → `index()` (lists all products)
+- GET `/products/create` → `create()` (displays create form)
+- POST `/products` → `store()` (stores a new product)
+- GET `/products/{id}` → `show()` (shows a specific product)
+- GET `/products/{id}/edit` → `edit()` (displays edit form)
+- PUT/PATCH `/products/{id}` → `update()` (updates a product)
+- DELETE `/products/{id}` → `destroy()` (deletes a product)
+
+
+| HTTP Verb | URI | Action | Route Name | Purpose |
+| --- | --- | --- | --- | --- |
+| GET | /products | index | products.index | Display a list of all products |
+| GET | /products/create | create | products.create | Show form to create a new product |
+| POST | /products | store | products.store | Store a new product |
+| GET | /products/{id} | show | products.show | Display a specific product |
+| GET | /products/{id}/edit | edit | products.edit | Show form to edit a product |
+| PUT/PATCH | /products/{id} | update | products.update | Update a specific product |
+| DELETE | /products/{id} | destroy | products.destroy | Delete a specific product |
+
+
