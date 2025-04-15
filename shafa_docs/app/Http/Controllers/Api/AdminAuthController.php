@@ -105,6 +105,63 @@ class AdminAuthController extends Controller
     /**
      * ایجاد مدیر جدید (فقط برای مدیران ارشد)
      */
+    /**
+     * ایجاد مدیر جدید
+     */
+    public function register(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:admins',
+                'password' => 'required|string|min:6|confirmed',
+            ], [
+                'email.unique' => 'این ایمیل قبلاً ثبت شده است.',
+                'email.required' => 'وارد کردن ایمیل الزامی است.',
+                'email.email' => 'لطفاً یک ایمیل معتبر وارد کنید.',
+                'name.required' => 'وارد کردن نام الزامی است.',
+                'password.required' => 'وارد کردن رمز عبور الزامی است.',
+                'password.min' => 'رمز عبور باید حداقل 6 کاراکتر باشد.',
+                'password.confirmed' => 'تأیید رمز عبور مطابقت ندارد.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'خطا در اعتبارسنجی اطلاعات',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // ایجاد مدیر
+            $admin = Admin::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            // ایجاد توکن
+            $token = $admin->createToken('AdminToken', ['admin'])->accessToken;
+
+            // پاسخ
+            return response()->json([
+                'status' => true,
+                'message' => 'ثبت مدیر با موفقیت انجام شد',
+                'admin' => $admin,
+                'token' => $token
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'خطا در ثبت مدیر',
+                'errors' => ['server' => ['خطای سیستمی رخ داده است: ' . $e->getMessage()]]
+            ], 500);
+        }
+    }
+
+
+
     public function createAdmin(Request $request)
     {
         try {
